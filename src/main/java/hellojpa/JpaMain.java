@@ -20,19 +20,12 @@ public class JpaMain {
         tx.begin(); // 트랜젝션 시작
 
         try {
-            /* 저장 */
-//            Member member = new Member();
-//            member.setId(1l);
-//            member.setName("memberA");
-//
-//            em.persist(member);
-//            tx.commit();
+            Member member = new Member(200l, "pororo");
+            em.persist(member);
 
-            /* 조회 */
-            Member findMember = em.find(Member.class, 1l);
-            /* 수정 */
-            findMember.setName("HelloJpa");
+            em.flush();
 
+            System.out.println("==============");
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
