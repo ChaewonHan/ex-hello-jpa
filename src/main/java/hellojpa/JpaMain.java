@@ -20,15 +20,31 @@ public class JpaMain {
         tx.begin(); // 트랜젝션 시작
 
         try {
-            Member member = new Member(200l, "pororo");
-            em.persist(member);
+            Member member1 = new Member();
+            member1.setUsername("A");
 
-            em.flush();
+            Member member2 = new Member();
+            member1.setUsername("B");
 
-            System.out.println("==============");
+            Member member3 = new Member();
+            member1.setUsername("C");
+
+            System.out.println("==================");
+
+            em.persist(member1); // 1, 51번까지 시퀀스 호출
+            em.persist(member2); // 메모리에서 호출
+            em.persist(member3); // 메모리에서 호출
+
+            System.out.println("member1 = " + member1.getId());
+            System.out.println("member2 = " + member2.getId());
+            System.out.println("member3 = " + member3.getId());
+
+            System.out.println("==================");
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
+            System.out.println("롤백");
         } finally {
             em.close();
         }
