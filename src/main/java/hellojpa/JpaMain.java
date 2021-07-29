@@ -19,20 +19,37 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Child child1 = new Child();
-            Child child2 = new Child();
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("homeCity", "street", "1234"));
 
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("닭발");
 
-            em.persist(parent);
+            member.getAddressHistory().add(new Address("old1", "street", "1234"));
+            member.getAddressHistory().add(new Address("old2", "street", "1234"));
 
+            em.persist(member);
             em.flush();
             em.clear();
 
-            Parent findParent = em.find(Parent.class, parent.getId());
-            findParent.getChildList().remove(0);
+            System.out.println("==========================");
+            Member findMember = em.find(Member.class, member.getId());
+
+            // select
+            List<Address> addressHistory = findMember.getAddressHistory();
+            for(Address address : addressHistory) {
+                System.out.println("address = " + address.getCity());
+            }
+
+            // update
+            findMember.getFavoriteFoods().remove("족발");
+            findMember.getFavoriteFoods().add("떡볶이");
+
+            //delete
+            findMember.getAddressHistory().remove(new Address("old1", "street", "1234"));
+            findMember.getAddressHistory().add(new Address("new1", "street", "1234"));
 
             tx.commit();
         } catch (Exception e) {
@@ -50,12 +67,5 @@ public class JpaMain {
         System.out.println("member = " + member.getUsername());
     }
 
-    private static void printMemberAndTeam(Member member) {
-        String username = member.getUsername();
-        System.out.println("username = " + username);
-
-        Team team = member.getTeam();
-        System.out.println("team = " + team.getName());
-    }
 }
 
